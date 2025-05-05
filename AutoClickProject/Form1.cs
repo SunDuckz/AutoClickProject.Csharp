@@ -27,9 +27,17 @@ namespace AutoClickProject
         private int clickInterval; // intervalo de tempo entre os cliques em milissegundos
         private List<int> clickIntervalList; // array para armazenar os intervalos de tempo entre os cliques
         private int valor;
+        private int valorAntes;
+        private int valorMeio;
+        private int valorDepois;
+        private int itemListAntes;
+        private int itemListMeio;
+        private int itemListDepois;
+
         public Form1()
         {
             InitializeComponent();
+
         }
 
 
@@ -37,16 +45,21 @@ namespace AutoClickProject
 
         public async void startAutoClicker(object Sender, EventArgs e)
         {
-            int valorAntes = (trackBar1.Value - 1 <= 0) ? 1 : trackBar1.Value - 1 ;
-            int valorMeio = (trackBar1.Value <= 0) ? 1 : trackBar1.Value;
-            int valorDepois = (trackBar1.Value + 1 <= 0) ? 1 : trackBar1.Value + 1;
+            valorAntes = (trackBar1.Value - 1 <= 0) ? 1 : trackBar1.Value - 1;
+            valorMeio = (trackBar1.Value <= 0) ? 1 : trackBar1.Value;
+            valorDepois = (trackBar1.Value + 1 <= 0) ? 1 : trackBar1.Value + 1;
 
-            clickIntervalList = new List<int> {1000 / valorAntes, 1000 / valorMeio, 1000 / valorDepois };
+
+            itemListAntes = 1000 / valorAntes;
+            itemListMeio = 1000 / valorMeio;
+            itemListDepois = 1000 / valorDepois;
+
+            clickIntervalList = new List<int> { itemListAntes, itemListMeio, itemListDepois };
+        
 
 
             if (comboBox1.SelectedItem.ToString() == "Modo Preciso")
             {
-
                 clickInterval = clickIntervalList[1];
             }
             else if (comboBox1.SelectedItem.ToString() == "Modo Variado")
@@ -56,11 +69,12 @@ namespace AutoClickProject
                 timerSecundario.Tick += (s, args) =>
                 {
                     // gera um numero aleatorio entre 0 e 2
-                    valor = random.Next(clickIntervalList.Count);
+                    valor = random.Next(0,2);
                     // pega o intervalo de tempo aleatorio da lista
                     clickInterval = clickIntervalList[valor];
                 };
             }
+
             // executa o clique
             timer.Start();
             timer.Interval = clickInterval; // define o intervalo de tempo entre os cliques
